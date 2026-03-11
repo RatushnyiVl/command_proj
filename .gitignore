@@ -1,1 +1,4 @@
 addressbook.pkl
+agenda.md
+__pycache__
+.gitignore

@@ -96,7 +96,7 @@ class Record:
            raise Exception("Phone number must contain 10 digits")
         return f"New phone number has been added. Current {self.name} record: {'; '.join(p.value for p in self.phones)}"
 
-    def remove_phone(self, phone_number:str):
+    def remove_phone(self, phone_number:str): # ------to change
         for p in self.phones:
             if p.value == phone_number:
                 self.phones.remove(p)
@@ -113,11 +113,16 @@ class Record:
     def find_phone(self, num:str):
         for p in self.phones:
             if p.value == num:
-                return p   
-        return f"Phone number: {num} was not found"
+                return p.value
+        return
+    
+    def show_email(self):
+        if self.email:
+            return self.email.value
+        return
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, email: {self.email}"
+        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, email: {self.email}, DOB: {self.birthday}"
 
 
 class AddressBook(UserDict):

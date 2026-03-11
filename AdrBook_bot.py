@@ -49,13 +49,22 @@ def change_contact(args:list, contacts:AddressBook):
         return record_to_change
 
 @input_error
-def show_phone(name:str, contacts:AddressBook):
-    return contacts.find(name[0])
+def finder(args:list, contacts:AddressBook):
+    if contacts:
+        for name, rec in contacts.data.items():
+            if name == args[0]:
+                return rec
+            if rec.find_phone(args[0]) == args[0]:
+                return rec
+            if rec.show_email() == args[0]:
+                return rec
+        return "No match"
+    return "The Address Book is empty."  
 
 @input_error
 def show_all(_, contacts:AddressBook):
     if not contacts:
-        return "The list of contacts is empty."
+        return "The Address Book is empty."
     return "\n".join(str(p) for p in list(contacts.data.values()))
 
 @input_error
@@ -65,15 +74,6 @@ def add_bday(args:list, contacts:AddressBook):
         return contacts.data[name].add_birthday(date)
     else:
         return "No such a name in the Address Book"
-
-@input_error    
-def show_bday(name:list, contacts: AddressBook):
-    if type(contacts.find(name[0])) == str:
-        return contacts.find(name[0])
-    if not contacts.find(name[0]).birthday:
-        return f"{name[0]} has no birthday information"
-    else:
-        return f"DOB: {contacts.find(name[0]).birthday.value}"
     
 def upcomming_bdays(_, contacts: AddressBook):
     return contacts.get_upcoming_birthdays()
@@ -105,19 +105,20 @@ def main():
         user_input = input("Enter a command: ")
         command, *args = parse_input(user_input)
 
+        # close bot
         if command in ["close", "exit"]:
             print("Good bye!")
             save_data(contacts)
             break
-
+        
+        # available commands
         available_commands = {
             'add': add_contact,
             'add-email': new_email,
             'all': show_all,
-            'show': show_phone,
             'change': change_contact,
+            'find': finder,
             'add-bday': add_bday,
-            'show-bday': show_bday,
             'birthdays': upcomming_bdays,
             'del': del_record,
             'info': show_info
@@ -129,5 +130,3 @@ def main():
         except:
             print('Invalid command')
         
-
-
